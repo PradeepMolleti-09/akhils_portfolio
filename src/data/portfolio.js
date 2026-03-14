@@ -22,10 +22,17 @@ import v0Icon from '../assets/v0.png';
 import aIcon from '../assets/a.png';
 
 // Projects
-import img14 from '../assets/project1.png';
-import img15 from '../assets/project2.png';
-import img16 from '../assets/project3.png';
-import img25 from '../assets/project4.png';
+import project1 from '../assets/project1.png';
+import project2 from '../assets/project2.png';
+import project3 from '../assets/project3.png';
+import project4 from '../assets/project4.png';
+import hero1 from '../assets/hero1.jpg';
+import hero2 from '../assets/hero2.jpg';
+import hero3 from '../assets/hero3.jpg';
+import hero4 from '../assets/hero4.jpg';
+import hero5 from '../assets/hero5.jpg';
+import hero6 from '../assets/hero6.jpg';
+import hero7 from '../assets/hero7.jpg';
 
 export const experience = [
   {
@@ -100,7 +107,8 @@ export const projects = [
     industry: 'Sports Lab',
     tags: ['UI DESIGN', 'UX RESEARCH', 'BRANDING'],
     year: '2023',
-    image: img14,
+    image: project1,
+    images: [project1, hero1, hero2, hero3],
     link: '#'
   },
   {
@@ -112,7 +120,8 @@ export const projects = [
     industry: 'Technology',
     tags: ['UI DESIGN', 'ANIMATION'],
     year: '2023',
-    image: img15,
+    image: project2,
+    images: [project2, hero4, hero5, hero6],
     link: '#'
   },
   {
@@ -124,7 +133,8 @@ export const projects = [
     industry: 'Finance',
     tags: ['UI DESIGN', 'STRATEGY'],
     year: '2022',
-    image: img16,
+    image: project3,
+    images: [project3, hero7, hero1, hero2],
     link: '#'
   },
   {
@@ -136,7 +146,8 @@ export const projects = [
     industry: 'Real Estate',
     tags: ['PRODUCT DESIGN', 'UX SYSTEM'],
     year: '2024',
-    image: img25,
+    image: project4,
+    images: [project4, hero3, hero4, hero5],
     link: '#'
   }
 ];

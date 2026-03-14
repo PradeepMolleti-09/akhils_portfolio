@@ -56,10 +56,10 @@ const HeroSection = () => {
             return (
               <motion.div
                 key={index}
-                className="absolute left-1/2 top-1/2 w-[220px] aspect-[10/14] rounded-[2.5rem] overflow-hidden shadow-[0_30px_80px_rgba(0,0,0,0.1)] border border-zinc-200 origin-center bg-white"
+                className="absolute left-1/2 top-1/2 w-[185px] aspect-[10/14] rounded-[1.5rem] overflow-hidden shadow-[0_30px_80px_rgba(0,0,0,0.1)] border border-zinc-200 origin-center bg-white"
                 style={{
-                  marginLeft: '-110px',
-                  marginTop: '-154px',
+                  marginLeft: '-92px',
+                  marginTop: '-130px',
                   transform: `rotate(${angle}deg) translate(${radius}px) rotate(90deg)`
                 }}
               >
@@ -80,7 +80,7 @@ const HeroSection = () => {
           initial={{ opacity: 0, scale: 0.95 }}
           animate={{ opacity: 1, scale: 1 }}
           transition={{ duration: 1.2, ease: "easeOut" }}
-          className="text-4xl md:text-5xl lg:text-[4rem] font-serif italic mb-10 text-black tracking-tight text-center leading-[1.1]"
+          className="text-4xl md:text-5xl lg:text-[4rem] font-serif italic mb-6 text-black tracking-tight text-center leading-[1.1]"
         >
           Seriously a good designer
         </motion.h1>
@@ -90,10 +90,10 @@ const HeroSection = () => {
           initial={{ opacity: 0, y: 30 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.8, delay: 0.3 }}
-          className="bg-[#1A1A1A] rounded-[2rem] p-3 pr-10 flex items-center gap-5 w-full max-w-[550px] shadow-[0_30px_70px_rgba(0,0,0,0.3)]"
+          className="bg-[#1A1A1A] rounded-[12px] p-3 pr-8 flex items-center gap-5 w-full max-w-[580px] shadow-[0_30px_70px_rgba(0,0,0,0.3)]"
         >
-          <div className="w-12 h-12 rounded-xl overflow-hidden shrink-0 bg-[#222222] p-1 shadow-inner">
-            <img src={thumbImg} alt="Avatar" className="w-full h-full object-cover rounded-lg" />
+          <div className="w-12 h-12 rounded-lg overflow-hidden shrink-0 bg-[#222222] p-1 shadow-inner">
+            <img src={thumbImg} alt="Avatar" className="w-full h-full object-cover rounded-md" />
           </div>
           <div className="flex-1 flex flex-col justify-center">
             <h3 className="text-lg md:text-xl font-black text-white tracking-[0.02em] uppercase leading-none mb-1">AKHIL NISHTALA</h3>
@@ -102,12 +102,10 @@ const HeroSection = () => {
             </p>
           </div>
 
-          <div className="flex items-center gap-6 pl-6 border-l border-white/10">
-            <div className="flex flex-col gap-[4px] cursor-pointer">
-              <div className="w-6 h-[2px] bg-white rounded-full"></div>
-              <div className="w-6 h-[2px] bg-white rounded-full"></div>
-              <div className="w-6 h-[2px] bg-white rounded-full"></div>
-            </div>
+          <div className="flex items-center gap-4 pl-6 border-l border-white/10 py-1">
+            <a href="#" className="text-[10px] font-black text-white uppercase tracking-wider hover:text-zinc-400 transition-colors">LinkedIn</a>
+            <div className="w-[1px] h-3 bg-white/10"></div>
+            <a href="#" className="text-[10px] font-black text-white uppercase tracking-wider hover:text-zinc-400 transition-colors whitespace-nowrap">Download CV</a>
           </div>
         </motion.div>
 
