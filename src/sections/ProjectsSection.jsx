@@ -4,10 +4,15 @@ import { projects } from '../data/portfolio';
 
 const ProjectCarousel = ({ images }) => {
   const containerRef = useRef(null);
-  const [activeIdx, setActiveIdx] = useState(0);
   const x = useMotionValue(0);
   const [width, setWidth] = useState(0);
   const [isHovered, setIsHovered] = useState(false);
+
+  // Create a virtual circular array by repeating the images multiple times
+  const extendedImages = Array.from({ length: 11 }).flatMap(() => images);
+  
+  // Start perfectly in the middle block so dragging in either direction is safe
+  const [activeIdx, setActiveIdx] = useState(images.length * 5);
 
   useEffect(() => {
     if (containerRef.current) {
@@ -20,14 +25,14 @@ const ProjectCarousel = ({ images }) => {
     return () => window.removeEventListener('resize', handleResize);
   }, []);
 
-  // Auto-play interval that pauses on hover/drag
+  // Auto-play interval that continuously loops in one direction uniformly
   useEffect(() => {
     if (isHovered) return;
     const timer = setInterval(() => {
-      setActiveIdx((prevIdx) => (prevIdx + 1) % images.length);
+      setActiveIdx((prevIdx) => prevIdx + 1);
     }, 4000);
     return () => clearInterval(timer);
-  }, [images.length, isHovered]);
+  }, [isHovered]);
 
   // Slide width calculation
   const slideWidth = width > 768 ? width * 0.75 : width * 0.85;
@@ -35,11 +40,6 @@ const ProjectCarousel = ({ images }) => {
   const totalSlideWidth = slideWidth + gap;
   const centerPadding = width ? (width - slideWidth) / 2 : 100;
 
-  // We only render exactly what we need, but we map the active index visually over the standard length
-  // The layout wraps around logically.
-  
-  // Calculate relative distances for the items to create the circular effect visually
-  // We'll give the images a stable standard array, and just update the current active element's styles
   return (
     <div className="relative w-full overflow-hidden bg-white">
       <div 
@@ -52,29 +52,33 @@ const ProjectCarousel = ({ images }) => {
       >
         <motion.div
           drag="x"
-          dragConstraints={{ left: -((images.length * 3) * totalSlideWidth), right: ((images.length * 2) * totalSlideWidth) }}
-          dragElastic={0.8}
+          dragConstraints={{ 
+            left: -(extendedImages.length - 1) * totalSlideWidth, 
+            right: 0 
+          }}
+          dragElastic={0.2}
           style={{ x, paddingLeft: centerPadding }}
           onDragEnd={(_, info) => {
             const velocity = info.velocity.x;
             const currentX = x.get();
             
-            // Allow wrapping in drag calculation
-            let offset = Math.round(-currentX / totalSlideWidth);
-            if (velocity < -400) offset += 1;
-            if (velocity > 400) offset -= 1;
+            let nextIdx = Math.round(-currentX / totalSlideWidth);
             
-            // Normalize back to 0 -> length-1 space
-            let normalizedIdx = ((offset % images.length) + images.length) % images.length;
-            setActiveIdx(normalizedIdx);
+            // Allow flicking
+            if (velocity < -400) nextIdx += 1;
+            if (velocity > 400) nextIdx -= 1;
+            
+            // Constrain within the virtual limits, practically infinite for User
+            nextIdx = Math.max(0, Math.min(nextIdx, extendedImages.length - 1));
+            setActiveIdx(nextIdx);
           }}
           animate={{ x: -activeIdx * totalSlideWidth }}
           transition={{ type: "spring", stiffness: 200, damping: 25 }}
           className="flex gap-[30px]"
         >
-          {images.map((img, idx) => (
+          {extendedImages.map((img, idx) => (
             <CarouselItem 
-              key={idx} 
+              key={`${idx}-${img}`} 
               img={img} 
               index={idx} 
               activeIndex={activeIdx}
@@ -84,20 +88,27 @@ const ProjectCarousel = ({ images }) => {
         </motion.div>
       </div>
 
-      {/* Sliding Dots Indicator */}
+      {/* Sliding Dots Indicator perfectly tracking the original images mapping */}
       <div className="flex justify-center items-center gap-2 mt-4">
-        {images.map((_, idx) => (
-          <motion.div
-            key={idx}
-            onClick={() => setActiveIdx(idx)}
-            className="h-1.5 rounded-full cursor-pointer transition-colors"
-            animate={{
-              width: activeIdx === idx ? 24 : 6,
-              backgroundColor: activeIdx === idx ? "#000000" : "#D4D4D4"
-            }}
-            transition={{ type: "spring", stiffness: 300, damping: 30 }}
-          />
-        ))}
+        {images.map((_, originalIdx) => {
+          const isActiveDot = (activeIdx % images.length) === originalIdx;
+          return (
+            <motion.div
+              key={originalIdx}
+              onClick={() => {
+                // Jump to the clicked dot in the current virtual block context
+                const currentBlock = Math.floor(activeIdx / images.length);
+                setActiveIdx(currentBlock * images.length + originalIdx);
+              }}
+              className="h-1.5 rounded-full cursor-pointer transition-colors"
+              animate={{
+                width: isActiveDot ? 24 : 6,
+                backgroundColor: isActiveDot ? "#000000" : "#D4D4D4"
+              }}
+              transition={{ type: "spring", stiffness: 300, damping: 30 }}
+            />
+          )
+        })}
       </div>
     </div>
   );
@@ -110,18 +121,26 @@ const CarouselItem = ({ img, index, activeIndex, slideWidth }) => {
     <motion.div
       animate={{
         scale: isFocused ? 1 : 0.94,
-        filter: isFocused ? "blur(0px) grayscale(0%)" : "blur(3px) grayscale(100%)",
-        opacity: isFocused ? 1 : 0.6,
+        filter: isFocused ? "blur(0px) grayscale(0%)" : "blur(1px) grayscale(100%)",
+        opacity: isFocused ? 1 : 0.8,
       }}
       transition={{ duration: 0.5, ease: "easeOut" }}
       style={{ width: slideWidth }}
-      className={`relative shrink-0 aspect-[16/9] overflow-hidden bg-zinc-200 border-2 ${isFocused ? 'border-zinc-400' : 'border-zinc-200'}`}
+      className={`relative shrink-0 aspect-[16/9] overflow-hidden bg-[#f4f4f4] ${isFocused ? 'shadow-xl' : 'border border-black/5'}`}
     >
       <img
         src={img}
         alt={`Project slide ${index + 1}`}
         className="w-full h-full object-cover pointer-events-none"
       />
+      {/* Black and white gradient overlay effect for beside images */}
+      {!isFocused && (
+        <motion.div 
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          className="absolute inset-0 bg-gradient-to-tr from-white/60 to-transparent pointer-events-none mix-blend-screen"
+        />
+      )}
     </motion.div>
   );
 };
