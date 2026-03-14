@@ -1,5 +1,5 @@
-import React from 'react';
-import { motion } from 'framer-motion';
+import React, { useState } from 'react';
+import { motion, AnimatePresence } from 'framer-motion';
 import thumbImg from '../assets/Frame 10.png';
 // Importing all rectangle assets for more variety
 import img1 from '../assets/hero1.jpg';
@@ -10,6 +10,8 @@ import img5 from '../assets/hero5.jpg';
 import img7 from '../assets/hero7.jpg';
 
 const HeroSection = () => {
+  const [isMenuOpen, setIsMenuOpen] = useState(false);
+  
   // Creating a larger pool of images
   const archProjects = [img1, img2, img3, img4, img5, img7, img1, img2, img3, img4, img5, img7];
 
@@ -87,25 +89,58 @@ const HeroSection = () => {
 
         {/* The Signature Pill Card */}
         <motion.div
+          layout
           initial={{ opacity: 0, y: 30 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.8, delay: 0.3 }}
-          className="bg-[#1A1A1A] rounded-[12px] p-3 pr-8 flex items-center gap-5 w-full max-w-[580px] shadow-[0_30px_70px_rgba(0,0,0,0.3)]"
+          className="bg-[#1A1A1A] rounded-[12px] p-3 pr-8 flex items-center justify-between gap-5 w-auto min-w-[340px] md:min-w-[420px] shadow-[0_30px_70px_rgba(0,0,0,0.3)]"
         >
-          <div className="w-12 h-12 rounded-lg overflow-hidden shrink-0 bg-[#222222] p-1 shadow-inner">
-            <img src={thumbImg} alt="Avatar" className="w-full h-full object-cover rounded-md" />
-          </div>
-          <div className="flex-1 flex flex-col justify-center">
-            <h3 className="text-lg md:text-xl font-black text-white tracking-[0.02em] uppercase leading-none mb-1">AKHIL NISHTALA</h3>
-            <p className="text-[9px] md:text-[10px] text-zinc-500 font-bold tracking-[0.02em] uppercase opacity-80 truncate">
-              PRODUCT DESIGNER, CREATIVE DESIGNER, UI UX DES...
-            </p>
+          <div className="flex items-center gap-5">
+            <div className="w-12 h-12 rounded-lg overflow-hidden shrink-0 bg-[#222222] p-1 shadow-inner">
+              <img src={thumbImg} alt="Avatar" className="w-full h-full object-cover rounded-md" />
+            </div>
+            <div className="flex flex-col justify-center">
+              <h3 className="text-lg md:text-xl font-black text-white tracking-[0.02em] uppercase leading-none mb-1">AKHIL NISHTALA</h3>
+              <p className="text-[9px] md:text-[10px] text-zinc-500 font-bold tracking-[0.02em] uppercase opacity-80 truncate">
+                PRODUCT DESIGNER, CREATIVE DESIGNER, UI UX DES...
+              </p>
+            </div>
           </div>
 
           <div className="flex items-center gap-4 pl-6 border-l border-white/10 py-1">
-            <a href="#" className="text-[10px] font-black text-white uppercase tracking-wider hover:text-zinc-400 transition-colors">LinkedIn</a>
-            <div className="w-[1px] h-3 bg-white/10"></div>
-            <a href="#" className="text-[10px] font-black text-white uppercase tracking-wider hover:text-zinc-400 transition-colors whitespace-nowrap">Download CV</a>
+            <AnimatePresence mode="wait">
+              {isMenuOpen && (
+                <motion.div 
+                  initial={{ opacity: 0, x: 20 }}
+                  animate={{ opacity: 1, x: 0 }}
+                  exit={{ opacity: 0, x: 20 }}
+                  className="flex items-center gap-4"
+                >
+                  <a href="#" className="text-[10px] font-black text-white uppercase tracking-wider hover:text-zinc-400 transition-colors">LinkedIn</a>
+                  <div className="w-[1px] h-3 bg-white/10"></div>
+                  <a href="#" className="text-[10px] font-black text-white uppercase tracking-wider hover:text-zinc-400 transition-colors whitespace-nowrap">Download CV</a>
+                </motion.div>
+              )}
+            </AnimatePresence>
+
+            {/* Interactive Menu Icon */}
+            <div 
+              onClick={() => setIsMenuOpen(!isMenuOpen)}
+              className="relative w-6 h-6 flex flex-col justify-center items-center gap-1.5 cursor-pointer group"
+            >
+              <motion.div 
+                animate={isMenuOpen ? { rotate: 45, y: 8 } : { rotate: 0, y: 0 }}
+                className="w-6 h-[2px] bg-white rounded-full transition-colors group-hover:bg-zinc-400" 
+              />
+              <motion.div 
+                animate={isMenuOpen ? { opacity: 0 } : { opacity: 1 }}
+                className="w-6 h-[2px] bg-white rounded-full transition-colors group-hover:bg-zinc-400" 
+              />
+              <motion.div 
+                animate={isMenuOpen ? { rotate: -45, y: -8 } : { rotate: 0, y: 0 }}
+                className="w-6 h-[2px] bg-white rounded-full transition-colors group-hover:bg-zinc-400" 
+              />
+            </div>
           </div>
         </motion.div>
 
