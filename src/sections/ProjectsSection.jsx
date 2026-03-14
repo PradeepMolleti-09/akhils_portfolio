@@ -76,13 +76,13 @@ const CarouselItem = ({ img, index, activeIndex, slideWidth }) => {
   return (
     <motion.div
       animate={{
-        scale: isFocused ? 1 : 0.92,
-        filter: isFocused ? "blur(0px) grayscale(0%)" : "blur(8px) grayscale(100%)",
-        opacity: isFocused ? 1 : 0.5,
+        scale: isFocused ? 1 : 0.94,
+        filter: isFocused ? "blur(0px) grayscale(0%)" : "blur(3px) grayscale(100%)",
+        opacity: isFocused ? 1 : 0.6,
       }}
       transition={{ duration: 0.5, ease: "easeOut" }}
       style={{ width: slideWidth }}
-      className={`relative shrink-0 aspect-[16/9] overflow-hidden bg-zinc-200 border-2 ${isFocused ? 'border-zinc-300' : 'border-black/10'}`}
+      className={`relative shrink-0 aspect-[16/9] overflow-hidden bg-zinc-200 border-2 ${isFocused ? 'border-zinc-400' : 'border-zinc-200'}`}
     >
       <img
         src={img}
