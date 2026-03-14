@@ -30,7 +30,7 @@ import project15 from '../assets/project15.png';
 import project16 from '../assets/project16.png';
 import project17 from '../assets/project17.png';
 
-import project21 from '../assets/project11.png';
+import project21 from '../assets/project21.png';
 import project22 from '../assets/project22.png';
 import project23 from '../assets/project23.png';
 import project24 from '../assets/project24.png';
@@ -50,15 +50,6 @@ import project43 from '../assets/project43.png';
 import project44 from '../assets/project44.png';
 import project45 from '../assets/project45.png';
 import project46 from '../assets/project46.png';
-
-
-import hero1 from '../assets/hero1.jpg';
-import hero2 from '../assets/hero2.jpg';
-import hero3 from '../assets/hero3.jpg';
-import hero4 from '../assets/hero4.jpg';
-import hero5 from '../assets/hero5.jpg';
-import hero6 from '../assets/hero6.jpg';
-import hero7 from '../assets/hero7.jpg';
 
 export const experience = [
   {

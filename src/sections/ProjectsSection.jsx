@@ -2,11 +2,12 @@ import React, { useRef, useState, useEffect } from 'react';
 import { motion, useMotionValue } from 'framer-motion';
 import { projects } from '../data/portfolio';
 
-const ProjectCarousel = ({ images, title }) => {
+const ProjectCarousel = ({ images }) => {
   const containerRef = useRef(null);
   const [activeIdx, setActiveIdx] = useState(0);
   const x = useMotionValue(0);
   const [width, setWidth] = useState(0);
+  const [isHovered, setIsHovered] = useState(false);
 
   useEffect(() => {
     if (containerRef.current) {
@@ -19,47 +20,53 @@ const ProjectCarousel = ({ images, title }) => {
     return () => window.removeEventListener('resize', handleResize);
   }, []);
 
-  // Auto-play infinite loop
+  // Auto-play interval that pauses on hover/drag
   useEffect(() => {
+    if (isHovered) return;
     const timer = setInterval(() => {
       setActiveIdx((prevIdx) => (prevIdx + 1) % images.length);
     }, 4000);
     return () => clearInterval(timer);
-  }, [images.length]);
+  }, [images.length, isHovered]);
 
   // Slide width calculation
   const slideWidth = width > 768 ? width * 0.75 : width * 0.85;
-  const gap = 30; // Increased gap for clarity
+  const gap = 30;
   const totalSlideWidth = slideWidth + gap;
-
-  // Initial padding to center the first item
-  // Padding = (ContainerWidth - SlideWidth) / 2
   const centerPadding = width ? (width - slideWidth) / 2 : 100;
 
+  // We only render exactly what we need, but we map the active index visually over the standard length
+  // The layout wraps around logically.
+  
+  // Calculate relative distances for the items to create the circular effect visually
+  // We'll give the images a stable standard array, and just update the current active element's styles
   return (
     <div className="relative w-full overflow-hidden bg-white">
       <div 
         ref={containerRef} 
         className="w-full py-12 flex cursor-grab active:cursor-grabbing"
+        onMouseEnter={() => setIsHovered(true)}
+        onMouseLeave={() => setIsHovered(false)}
+        onTouchStart={() => setIsHovered(true)}
+        onTouchEnd={() => setIsHovered(false)}
       >
         <motion.div
           drag="x"
-          dragConstraints={{
-            left: -(images.length - 1) * totalSlideWidth,
-            right: 0,
-          }}
-          dragElastic={0.2}
+          dragConstraints={{ left: -((images.length * 3) * totalSlideWidth), right: ((images.length * 2) * totalSlideWidth) }}
+          dragElastic={0.8}
           style={{ x, paddingLeft: centerPadding }}
           onDragEnd={(_, info) => {
             const velocity = info.velocity.x;
             const currentX = x.get();
             
-            let nextIdx = Math.round(-currentX / totalSlideWidth);
+            // Allow wrapping in drag calculation
+            let offset = Math.round(-currentX / totalSlideWidth);
+            if (velocity < -400) offset += 1;
+            if (velocity > 400) offset -= 1;
             
-            if (velocity < -400) nextIdx = Math.min(nextIdx + 1, images.length - 1);
-            if (velocity > 400) nextIdx = Math.max(nextIdx - 1, 0);
-            
-            setActiveIdx(nextIdx);
+            // Normalize back to 0 -> length-1 space
+            let normalizedIdx = ((offset % images.length) + images.length) % images.length;
+            setActiveIdx(normalizedIdx);
           }}
           animate={{ x: -activeIdx * totalSlideWidth }}
           transition={{ type: "spring", stiffness: 200, damping: 25 }}
