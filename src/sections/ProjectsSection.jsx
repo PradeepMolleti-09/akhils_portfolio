@@ -82,7 +82,7 @@ const CarouselItem = ({ img, index, activeIndex, slideWidth }) => {
       }}
       transition={{ duration: 0.5, ease: "easeOut" }}
       style={{ width: slideWidth }}
-      className={`relative shrink-0 aspect-[16/9] overflow-hidden bg-zinc-200 border-2 ${isFocused ? 'border-zinc-200' : 'border-zinc-100/50'}`}
+      className={`relative shrink-0 aspect-[16/9] overflow-hidden bg-zinc-200 border-2 ${isFocused ? 'border-zinc-300' : 'border-black/10'}`}
     >
       <img
         src={img}
